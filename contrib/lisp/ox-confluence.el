@@ -55,7 +55,8 @@
 		     (table-cell . org-confluence-table-cell)
 		     (table-row . org-confluence-table-row)
 		     (template . org-confluence-template)
-		     (underline . org-confluence-underline)))
+		     (underline . org-confluence-underline)
+		     (verbatim . org-confluence-verbatim)))
 
 ;; All the functions we use
 (defun org-confluence-bold (bold contents info)
@@ -142,6 +143,10 @@
 
 (defun org-confluence-underline (underline contents info)
   (format "+%s+" contents))
+
+(defun org-confluence-verbatim (verbatim contents info)
+  (format "\{\{%s\}\}"
+	  (org-element-property :value verbatim)))
 
 (defun org-confluence--block (language theme contents)
   (concat "\{code:theme=" theme
