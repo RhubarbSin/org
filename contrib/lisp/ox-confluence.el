@@ -74,9 +74,23 @@
   (format "_%s_" contents))
 
 (defun org-confluence-item (item contents info)
-  (concat (make-string (1+ (org-confluence--li-depth item)) ?\-)
+  (let* ((plain-list (org-export-get-parent item))
+	 (type (org-element-property :type plain-list))
+	 (term (let ((tag (org-element-property :tag item)))
+		 (and tag (org-export-data tag info)))))
+    (case type
+      (ordered
+       (concat (make-string (1+ (org-confluence--li-depth item)) ?\#)
           " "
           (org-trim contents)))
+      (unordered
+       (concat (make-string (1+ (org-confluence--li-depth item)) ?\*)
+          " "
+          (org-trim contents)))
+      (descriptive
+	 (concat (make-string (1+ (org-confluence--li-depth item)) ?\*)
+		 " "
+		 (org-trim (concat term ": " contents)))))))
 
 (defun org-confluence-fixed-width (fixed-width contents info)
   (format "\{\{%s\}\}" contents))
